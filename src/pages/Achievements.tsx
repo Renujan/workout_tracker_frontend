@@ -37,13 +37,13 @@ export const Achievements: React.FC = () => {
       </div>
 
       {/* Hero Achievement Stats Banner */}
-      <div className="bg-gradient-to-r from-zinc-900 via-[#18181B] to-zinc-900 border border-brand-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-zinc-900 via-[#18181B] to-zinc-900 border border-brand-500/30 rounded-3xl p-5 sm:p-8 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-5">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-brand-500/15 border border-brand-500/40 flex items-center justify-center text-brand-400 font-bold shadow-lg shrink-0">
-            <Trophy className="w-7 h-7" />
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-500/15 border border-brand-500/40 flex items-center justify-center text-brand-400 font-bold shadow-lg shrink-0">
+            <Trophy className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-white tracking-tight">
+            <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
               {unlockedCount} of {mockAchievements.length} Achievements Unlocked
             </h3>
             <p className="text-xs text-zinc-400 mt-0.5">
@@ -60,7 +60,7 @@ export const Achievements: React.FC = () => {
       </div>
 
       {/* Achievements Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {filtered.map((item) => (
           <AchievementCard key={item.id} achievement={item} />
         ))}
