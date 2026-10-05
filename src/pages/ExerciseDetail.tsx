@@ -56,29 +56,29 @@ export const ExerciseDetail: React.FC = () => {
       </div>
 
       {/* Hero Header Banner */}
-      <div className="relative rounded-3xl overflow-hidden h-64 border border-zinc-800 shadow-2xl">
+      <div className="relative rounded-3xl overflow-hidden h-48 sm:h-64 border border-zinc-800 shadow-2xl">
         <img
           src={exercise.imageUrl}
           alt={exercise.name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-[#09090B]/60 to-transparent p-6 sm:p-8 flex flex-col justify-end">
-          <p className="text-sm text-zinc-300 max-w-2xl leading-relaxed mb-4 font-normal">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-[#09090B]/60 to-transparent p-4 sm:p-8 flex flex-col justify-end">
+          <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl leading-relaxed mb-3 sm:mb-4 font-normal line-clamp-2 sm:line-clamp-none">
             {exercise.description}
           </p>
           <div className="flex gap-3">
             <button
               onClick={() => navigate('/workout/active')}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-bright text-black font-extrabold text-xs shadow-lg flex items-center gap-2"
+              className="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-bright text-black font-extrabold text-xs shadow-lg flex items-center gap-2"
             >
-              <Play className="w-4 h-4 fill-black" /> Log Exercise in Active Workout
+              <Play className="w-4 h-4 fill-black" /> Log in Active Workout
             </button>
           </div>
         </div>
       </div>
 
       {/* 4 Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <MetricCard
           title="Personal Best"
           value={`${exercise.personalBest.weight} kg`}
@@ -118,19 +118,19 @@ export const ExerciseDetail: React.FC = () => {
       {activeTab === 'Overview' && (
         <div className="space-y-6">
           {/* Progression Chart */}
-          <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-4">
+          <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h3 className="text-lg font-bold text-white tracking-tight">Progress Trajectory</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">Progress Trajectory</h3>
                 <p className="text-xs text-zinc-400">Tracking over recent training blocks</p>
               </div>
 
-              <div className="flex items-center gap-1 bg-[#202023] p-1 rounded-xl border border-zinc-800">
+              <div className="flex items-center gap-1 bg-[#202023] p-1 rounded-xl border border-zinc-800 overflow-x-auto max-w-full no-scrollbar">
                 {(['weight', 'volume', 'estimated1RM'] as const).map((m) => (
                   <button
                     key={m}
                     onClick={() => setChartMetric(m)}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-all ${
+                    className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-all whitespace-nowrap ${
                       chartMetric === m
                         ? 'bg-brand-500 text-black shadow'
                         : 'text-zinc-400 hover:text-white'

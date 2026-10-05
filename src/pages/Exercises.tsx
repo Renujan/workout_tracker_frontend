@@ -40,16 +40,18 @@ export const Exercises: React.FC = () => {
           placeholder="Search 100+ exercises by name or muscle group..."
         />
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-between">
           <FilterTabs
             options={muscleOptions}
             activeOption={selectedMuscle}
             onSelect={setSelectedMuscle}
+            className="w-full sm:w-auto"
           />
           <FilterTabs
             options={equipmentOptions}
             activeOption={selectedEquipment}
             onSelect={setSelectedEquipment}
+            className="w-full sm:w-auto"
           />
         </div>
       </div>
