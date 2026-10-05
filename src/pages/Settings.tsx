@@ -22,7 +22,7 @@ export const Settings: React.FC = () => {
       </div>
 
       {/* Appearance Section */}
-      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-4">
+      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400">
             <Moon className="w-5 h-5" />
@@ -33,12 +33,12 @@ export const Settings: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 pt-2">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2">
           {(['dark', 'light', 'system'] as const).map((mode) => (
             <button
               key={mode}
               onClick={() => setAppearance(mode)}
-              className={`p-3.5 rounded-2xl border font-bold text-xs uppercase tracking-wider transition-all text-center ${
+              className={`p-3 sm:p-3.5 rounded-2xl border font-bold text-xs uppercase tracking-wider transition-all text-center ${
                 appearance === mode
                   ? 'bg-brand-500 text-black border-brand-400 shadow-md'
                   : 'bg-[#202023] text-zinc-400 border-zinc-800 hover:text-white'
@@ -51,7 +51,7 @@ export const Settings: React.FC = () => {
       </div>
 
       {/* Measurement Units */}
-      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-4">
+      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400">
             <Scale className="w-5 h-5" />
