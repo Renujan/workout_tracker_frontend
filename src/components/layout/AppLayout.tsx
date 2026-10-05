@@ -16,14 +16,14 @@ interface AppLayoutProps {
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-[#09090B] text-zinc-100 flex flex-col md:flex-row antialiased font-sans">
+    <div className="min-h-screen bg-[#09090B] text-zinc-100 flex flex-col md:flex-row antialiased font-sans overflow-x-hidden">
       {/* Sidebar for Desktop */}
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col md:pl-64 min-w-0 min-h-screen pb-20 md:pb-8">
+      <div className="flex-1 flex flex-col md:pl-64 min-w-0 min-h-screen pb-24 md:pb-8 overflow-x-hidden">
         <Header />
-        <main className="flex-1 px-4 sm:px-8 py-6 max-w-7xl w-full mx-auto space-y-6">
+        <main className="flex-1 px-3 sm:px-8 py-4 sm:py-6 max-w-7xl w-full mx-auto space-y-6">
           {children}
         </main>
       </div>
