@@ -189,16 +189,18 @@ export const ActiveWorkout: React.FC = () => {
                   <span className="text-xs font-bold text-zinc-400 sm:hidden">Weight:</span>
                   <button
                     onClick={() => updateSet(activeExerciseIndex, setIdx, Math.max(0, set.weight - 2.5), set.reps)}
-                    className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-10 h-10 rounded-xl bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-white font-bold flex items-center justify-center active:scale-90 transition-all touch-manipulation"
+                    aria-label="Decrease Weight"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <div className="bg-[#18181B] border border-zinc-800 px-4 py-1.5 rounded-xl font-black text-lg text-white min-w-[80px] text-center">
+                  <div className="bg-[#18181B] border border-zinc-800 px-3.5 py-1.5 rounded-xl font-black text-base sm:text-lg text-white min-w-[76px] text-center">
                     {set.weight} <span className="text-xs font-normal text-zinc-400">kg</span>
                   </div>
                   <button
                     onClick={() => updateSet(activeExerciseIndex, setIdx, set.weight + 2.5, set.reps)}
-                    className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-10 h-10 rounded-xl bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-white font-bold flex items-center justify-center active:scale-90 transition-all touch-manipulation"
+                    aria-label="Increase Weight"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -209,16 +211,18 @@ export const ActiveWorkout: React.FC = () => {
                   <span className="text-xs font-bold text-zinc-400 sm:hidden">Reps:</span>
                   <button
                     onClick={() => updateSet(activeExerciseIndex, setIdx, set.weight, Math.max(1, set.reps - 1))}
-                    className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-10 h-10 rounded-xl bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-white font-bold flex items-center justify-center active:scale-90 transition-all touch-manipulation"
+                    aria-label="Decrease Reps"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <div className="bg-[#18181B] border border-zinc-800 px-4 py-1.5 rounded-xl font-black text-lg text-brand-400 min-w-[70px] text-center">
+                  <div className="bg-[#18181B] border border-zinc-800 px-3.5 py-1.5 rounded-xl font-black text-base sm:text-lg text-brand-400 min-w-[70px] text-center">
                     {set.reps} <span className="text-xs font-normal text-zinc-400">reps</span>
                   </div>
                   <button
                     onClick={() => updateSet(activeExerciseIndex, setIdx, set.weight, set.reps + 1)}
-                    className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-10 h-10 rounded-xl bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-white font-bold flex items-center justify-center active:scale-90 transition-all touch-manipulation"
+                    aria-label="Increase Reps"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
