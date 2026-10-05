@@ -38,16 +38,16 @@ export const Body: React.FC = () => {
           <p className="text-xs text-zinc-400">Track body composition, body part measurements & visual progress photos</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => setIsLogWeightModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs border border-zinc-700 transition-colors"
+            className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs border border-zinc-700 transition-colors text-center"
           >
             Log Weight
           </button>
           <button
             onClick={() => setIsLogMeasurementOpen(true)}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-bright text-black font-extrabold text-xs shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
+            className="flex-1 sm:flex-none px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-bright text-black font-extrabold text-xs shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-1.5"
           >
             <Plus className="w-4 h-4" /> Log Measurement
           </button>
@@ -75,9 +75,9 @@ export const Body: React.FC = () => {
           </div>
 
           {/* Measurements Line Chart */}
-          <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-4">
+          <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
             <div>
-              <h3 className="text-lg font-bold text-white tracking-tight">Body Measurements Trend (cm)</h3>
+              <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">Body Measurements Trend (cm)</h3>
               <p className="text-xs text-zinc-400">Chest, Arms, Waist & Thighs trajectory</p>
             </div>
 
@@ -116,7 +116,7 @@ export const Body: React.FC = () => {
             onSelect={(opt) => setPhotoCategory(opt as any)}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {filteredPhotos.map((photo) => (
               <motion.div
                 key={photo.id}
