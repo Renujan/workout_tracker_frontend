@@ -87,20 +87,18 @@ export const History: React.FC = () => {
                 </p>
               </div>
 
-              <div className="flex items-center gap-4 bg-[#202023] p-3 rounded-2xl border border-zinc-800">
-                <div className="text-center">
-                  <span className="text-xs text-zinc-400 block font-semibold">Duration</span>
-                  <span className="text-lg font-black text-white">{selectedWorkout.durationMinutes} m</span>
+              <div className="grid grid-cols-3 gap-2 bg-[#202023] p-3 rounded-2xl border border-zinc-800 text-center">
+                <div>
+                  <span className="text-[10px] sm:text-xs text-zinc-400 block font-semibold">Duration</span>
+                  <span className="text-base sm:text-lg font-black text-white">{selectedWorkout.durationMinutes} m</span>
                 </div>
-                <div className="w-px h-8 bg-zinc-800" />
-                <div className="text-center">
-                  <span className="text-xs text-zinc-400 block font-semibold">Total Volume</span>
-                  <span className="text-lg font-black text-brand-400">{selectedWorkout.totalVolumeKg.toLocaleString()} kg</span>
+                <div className="border-x border-zinc-800">
+                  <span className="text-[10px] sm:text-xs text-zinc-400 block font-semibold">Volume</span>
+                  <span className="text-base sm:text-lg font-black text-brand-400">{selectedWorkout.totalVolumeKg.toLocaleString()} kg</span>
                 </div>
-                <div className="w-px h-8 bg-zinc-800" />
-                <div className="text-center">
-                  <span className="text-xs text-zinc-400 block font-semibold">Sets</span>
-                  <span className="text-lg font-black text-white">{selectedWorkout.totalSets}</span>
+                <div>
+                  <span className="text-[10px] sm:text-xs text-zinc-400 block font-semibold">Sets</span>
+                  <span className="text-base sm:text-lg font-black text-white">{selectedWorkout.totalSets}</span>
                 </div>
               </div>
             </div>
