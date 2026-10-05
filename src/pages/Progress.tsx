@@ -71,7 +71,7 @@ export const Progress: React.FC = () => {
       </div>
 
       {/* Top 4 Key Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <MetricCard
           title="Strength Index"
           value="+12.5%"
@@ -103,13 +103,13 @@ export const Progress: React.FC = () => {
       </div>
 
       {/* Strength Progression Multi-Line Chart */}
-      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-4">
+      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
         <div>
-          <h3 className="text-lg font-bold text-white tracking-tight">Compound Strength Growth (kg)</h3>
+          <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">Compound Strength Growth (kg)</h3>
           <p className="text-xs text-zinc-400">Bench Press, Barbell Squat & Conventional Deadlift</p>
         </div>
 
-        <div className="h-72 w-full pt-2">
+        <div className="h-64 sm:h-72 w-full pt-2">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={strengthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} />

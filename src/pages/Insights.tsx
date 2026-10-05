@@ -16,16 +16,16 @@ export const Insights: React.FC = () => {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-zinc-900 via-[#18181B] to-zinc-900 border border-brand-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-zinc-900 via-[#18181B] to-zinc-900 border border-brand-500/30 rounded-3xl p-5 sm:p-8 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-brand-500/15 border border-brand-500/40 flex items-center justify-center text-brand-400 font-bold shadow-lg shrink-0">
-            <Lightbulb className="w-7 h-7" />
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-500/15 border border-brand-500/40 flex items-center justify-center text-brand-400 font-bold shadow-lg shrink-0">
+            <Lightbulb className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <span className="text-xs font-black uppercase tracking-widest text-brand-400 bg-brand-500/10 px-3 py-0.5 rounded-full border border-brand-500/20">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-brand-400 bg-brand-500/10 px-3 py-0.5 rounded-full border border-brand-500/20">
               INTELLIGENCE SUMMARY
             </span>
-            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
+            <h3 className="text-lg sm:text-2xl font-black text-white tracking-tight mt-1">
               4 Key Performance Highlights Identified
             </h3>
             <p className="text-xs text-zinc-400 mt-0.5">
