@@ -39,7 +39,7 @@ export const Nutrition: React.FC = () => {
 
         <button
           onClick={() => setIsLogFoodModalOpen(true)}
-          className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-brand-500 to-brand-bright text-black font-extrabold text-sm shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+          className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-gradient-to-r from-brand-500 to-brand-bright text-black font-extrabold text-xs sm:text-sm shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
         >
           <Plus className="w-4 h-4" /> Log Food & Protein
         </button>
@@ -48,14 +48,14 @@ export const Nutrition: React.FC = () => {
       {/* Hero Circular Protein Focus & Macro Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Protein Target Circular Progress Hero */}
-        <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden">
+        <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-5 sm:p-6 shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden">
           <span className="text-xs uppercase tracking-widest font-extrabold text-brand-400 bg-brand-500/10 px-3 py-1 rounded-full border border-brand-500/20 mb-4">
             DAILY PROTEIN TARGET
           </span>
 
           <CircularProgress
             percentage={proteinPercentage}
-            size={160}
+            size={140}
             strokeWidth={12}
             color="#22c55e"
             centerText={`${nutrition.proteinGrams}g`}
@@ -68,7 +68,7 @@ export const Nutrition: React.FC = () => {
         </div>
 
         {/* 4 Macro Cards Grid */}
-        <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+        <div className="lg:col-span-2 grid grid-cols-2 gap-3 sm:gap-4">
           <MetricCard
             title="Calories"
             value={`${nutrition.calories} kcal`}
@@ -102,7 +102,7 @@ export const Nutrition: React.FC = () => {
       </div>
 
       {/* Protein Consistency Weekly Chart */}
-      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-4">
+      <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-lg font-bold text-white tracking-tight">Weekly Protein Consistency</h3>
