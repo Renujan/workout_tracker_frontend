@@ -133,6 +133,7 @@ export interface MealItem {
   carbsGrams: number;
   fatGrams: number;
   servingSize: string;
+  imageUrl?: string;
 }
 
 export interface DailyNutrition {
@@ -178,6 +179,7 @@ export interface FitnessGoal {
   unit: string;
   progressPercent: number;
   deadline?: string;
+  imageUrl?: string;
 }
 
 export interface Achievement {
@@ -190,6 +192,7 @@ export interface Achievement {
   progress?: number;
   maxProgress?: number;
   iconName: string;
+  imageUrl?: string;
 }
 
 export interface FitnessInsight {
