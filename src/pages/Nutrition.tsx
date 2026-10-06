@@ -159,17 +159,32 @@ export const Nutrition: React.FC = () => {
                 {items.length === 0 ? (
                   <p className="text-xs text-zinc-500 py-2">No meals logged for {cat} yet.</p>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {items.map((meal) => (
                       <div
                         key={meal.id}
-                        className="bg-[#202023] p-3 rounded-xl flex items-center justify-between text-xs"
+                        className="bg-[#202023] p-2.5 rounded-xl flex items-center justify-between text-xs gap-3 border border-zinc-800/60 hover:border-zinc-700/80 transition-all"
                       >
-                        <div>
-                          <span className="font-bold text-white block">{meal.name}</span>
-                          <span className="text-zinc-400">{meal.servingSize} • {meal.calories} kcal</span>
+                        <div className="flex items-center gap-3">
+                          {meal.imageUrl ? (
+                            <img
+                              src={meal.imageUrl}
+                              alt={meal.name}
+                              className="w-11 h-11 rounded-lg object-cover border border-zinc-700/60 shrink-0"
+                            />
+                          ) : (
+                            <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 shrink-0">
+                              <Utensils className="w-5 h-5" />
+                            </div>
+                          )}
+                          <div>
+                            <span className="font-bold text-white block leading-tight">{meal.name}</span>
+                            <span className="text-zinc-400 text-[11px]">{meal.servingSize} • {meal.calories} kcal</span>
+                          </div>
                         </div>
-                        <span className="font-extrabold text-brand-400">{meal.proteinGrams}g protein</span>
+                        <span className="font-extrabold text-brand-400 shrink-0 bg-brand-500/10 px-2.5 py-1 rounded-lg border border-brand-500/20">
+                          +{meal.proteinGrams}g protein
+                        </span>
                       </div>
                     ))}
                   </div>
