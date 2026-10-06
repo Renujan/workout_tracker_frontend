@@ -503,11 +503,11 @@ export const mockDailyNutrition: DailyNutrition = {
   waterLiters: 2.1,
   targetWaterLiters: 3.0,
   meals: [
-    { id: 'm1', category: 'Breakfast', name: '3 Whole Eggs & Toast', calories: 420, proteinGrams: 18, carbsGrams: 30, fatGrams: 22, servingSize: '1 plate' },
-    { id: 'm2', category: 'Breakfast', name: 'Whole Milk', calories: 150, proteinGrams: 8, carbsGrams: 12, fatGrams: 8, servingSize: '250 ml' },
-    { id: 'm3', category: 'Breakfast', name: 'Rolled Oats with Berries', calories: 310, proteinGrams: 11, carbsGrams: 55, fatGrams: 5, servingSize: '1 bowl' },
-    { id: 'm4', category: 'Lunch', name: 'Grilled Chicken Breast & Jasmine Rice', calories: 650, proteinGrams: 35, carbsGrams: 85, fatGrams: 12, servingSize: '350 g' },
-    { id: 'm5', category: 'Snack', name: 'Greek Yogurt with Honey', calories: 210, proteinGrams: 20, carbsGrams: 25, fatGrams: 3, servingSize: '200 g' },
+    { id: 'm1', category: 'Breakfast', name: '3 Whole Eggs & Toast', calories: 420, proteinGrams: 18, carbsGrams: 30, fatGrams: 22, servingSize: '1 plate', imageUrl: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80&w=400' },
+    { id: 'm2', category: 'Breakfast', name: 'Whole Milk', calories: 150, proteinGrams: 8, carbsGrams: 12, fatGrams: 8, servingSize: '250 ml', imageUrl: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&q=80&w=400' },
+    { id: 'm3', category: 'Breakfast', name: 'Rolled Oats with Berries', calories: 310, proteinGrams: 11, carbsGrams: 55, fatGrams: 5, servingSize: '1 bowl', imageUrl: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?auto=format&fit=crop&q=80&w=400' },
+    { id: 'm4', category: 'Lunch', name: 'Grilled Chicken Breast & Jasmine Rice', calories: 650, proteinGrams: 35, carbsGrams: 85, fatGrams: 12, servingSize: '350 g', imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&q=80&w=400' },
+    { id: 'm5', category: 'Snack', name: 'Greek Yogurt with Honey', calories: 210, proteinGrams: 20, carbsGrams: 25, fatGrams: 3, servingSize: '200 g', imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=400' },
   ],
   weeklyProteinHistory: [
     { day: 'Mon', proteinGrams: 115 },
@@ -545,6 +545,7 @@ export const mockGoals: FitnessGoal[] = [
     unit: 'kg',
     progressPercent: 75,
     deadline: 'Dec 2026',
+    imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=600',
   },
   {
     id: 'g_2',
@@ -555,6 +556,7 @@ export const mockGoals: FitnessGoal[] = [
     unit: 'kg',
     progressPercent: 64,
     deadline: 'Jan 2027',
+    imageUrl: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&q=80&w=600',
   },
   {
     id: 'g_3',
@@ -564,6 +566,7 @@ export const mockGoals: FitnessGoal[] = [
     currentValue: 92,
     unit: 'g/day',
     progressPercent: 77,
+    imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&q=80&w=600',
   },
   {
     id: 'g_4',
@@ -573,18 +576,19 @@ export const mockGoals: FitnessGoal[] = [
     currentValue: 5,
     unit: 'sessions/wk',
     progressPercent: 83,
+    imageUrl: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=600',
   },
 ];
 
 export const mockAchievements: Achievement[] = [
-  { id: 'ac_1', title: 'First Workout', description: 'Log your very first workout in ProgressX', category: 'Beginner', unlocked: true, unlockedAt: 'Jan 15, 2024', iconName: 'Dumbbell' },
-  { id: 'ac_2', title: '7 Day Streak', description: 'Maintain a 7-day workout streak', category: 'Consistency', unlocked: true, unlockedAt: 'Feb 10, 2024', iconName: 'Flame' },
-  { id: 'ac_3', title: '30 Day Streak', description: 'Maintain a 30-day streak', category: 'Consistency', unlocked: false, progress: 12, maxProgress: 30, iconName: 'Zap' },
-  { id: 'ac_4', title: 'First PR', description: 'Set your first personal record', category: 'Strength', unlocked: true, unlockedAt: 'Feb 02, 2024', iconName: 'Trophy' },
-  { id: 'ac_5', title: '100 Workouts', description: 'Complete 100 total workouts', category: 'Milestones', unlocked: true, unlockedAt: 'Jul 20, 2026', iconName: 'Award' },
-  { id: 'ac_6', title: '1,000 Sets', description: 'Log over 1,000 working sets', category: 'Milestones', unlocked: true, unlockedAt: 'Aug 14, 2026', iconName: 'Layers' },
-  { id: 'ac_7', title: 'Protein Master', description: 'Hit your protein target 7 days in a row', category: 'Nutrition', unlocked: true, unlockedAt: 'Sep 12, 2026', iconName: 'Apple' },
-  { id: 'ac_8', title: 'Consistency Champion', description: 'Achieve an overall 85%+ weekly consistency score', category: 'Mastery', unlocked: true, unlockedAt: 'Sep 25, 2026', iconName: 'Crown' },
+  { id: 'ac_1', title: 'First Workout', description: 'Log your very first workout in ProgressX', category: 'Beginner', unlocked: true, unlockedAt: 'Jan 15, 2024', iconName: 'Dumbbell', imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=400' },
+  { id: 'ac_2', title: '7 Day Streak', description: 'Maintain a 7-day workout streak', category: 'Consistency', unlocked: true, unlockedAt: 'Feb 10, 2024', iconName: 'Flame', imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=400' },
+  { id: 'ac_3', title: '30 Day Streak', description: 'Maintain a 30-day streak', category: 'Consistency', unlocked: false, progress: 12, maxProgress: 30, iconName: 'Zap', imageUrl: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80&w=400' },
+  { id: 'ac_4', title: 'First PR', description: 'Set your first personal record', category: 'Strength', unlocked: true, unlockedAt: 'Feb 02, 2024', iconName: 'Trophy', imageUrl: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=400' },
+  { id: 'ac_5', title: '100 Workouts', description: 'Complete 100 total workouts', category: 'Milestones', unlocked: true, unlockedAt: 'Jul 20, 2026', iconName: 'Award', imageUrl: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&q=80&w=400' },
+  { id: 'ac_6', title: '1,000 Sets', description: 'Log over 1,000 working sets', category: 'Milestones', unlocked: true, unlockedAt: 'Aug 14, 2026', iconName: 'Layers', imageUrl: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&q=80&w=400' },
+  { id: 'ac_7', title: 'Protein Master', description: 'Hit your protein target 7 days in a row', category: 'Nutrition', unlocked: true, unlockedAt: 'Sep 12, 2026', iconName: 'Apple', imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&q=80&w=400' },
+  { id: 'ac_8', title: 'Consistency Champion', description: 'Achieve an overall 85%+ weekly consistency score', category: 'Mastery', unlocked: true, unlockedAt: 'Sep 25, 2026', iconName: 'Crown', imageUrl: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&q=80&w=400' },
 ];
 
 export const mockInsights: FitnessInsight[] = [
