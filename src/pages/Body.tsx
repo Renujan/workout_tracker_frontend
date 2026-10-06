@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Scale, Activity, Plus, Camera, Ruler, Calendar } from 'lucide-react';
 import {
@@ -14,11 +15,14 @@ import { useApp } from '../context/AppContext';
 import { MetricCard } from '../components/common/MetricCard';
 import { FilterTabs } from '../components/common/FilterTabs';
 import { LogMeasurementModal } from '../components/body/LogMeasurementModal';
+import { MuscleAreaCard } from '../components/body/MuscleAreaCard';
 import { mockBodyMeasurements, mockProgressPhotos } from '../data/mockData';
+import { mockMuscleAreas } from '../data/muscleAreasData';
 
 export const Body: React.FC = () => {
+  const navigate = useNavigate();
   const { user, setIsLogWeightModalOpen } = useApp();
-  const [activeTab, setActiveTab] = useState<'Measurements' | 'Photos'>('Measurements');
+  const [activeTab, setActiveTab] = useState<'Measurements' | 'Muscle Areas' | 'Photos'>('Measurements');
   const [photoCategory, setPhotoCategory] = useState<'All' | 'Front' | 'Side' | 'Back'>('All');
   const [isLogMeasurementOpen, setIsLogMeasurementOpen] = useState(false);
 
@@ -34,8 +38,8 @@ export const Body: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black text-white tracking-tight">Body Progress & Photos</h2>
-          <p className="text-xs text-zinc-400">Track body composition, body part measurements & visual progress photos</p>
+          <h2 className="text-2xl font-black text-white tracking-tight">Body Progress & Muscle Areas</h2>
+          <p className="text-xs text-zinc-400">Track muscle region targets, body part measurements & visual progress photos</p>
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -56,7 +60,7 @@ export const Body: React.FC = () => {
 
       {/* Main Tabs */}
       <FilterTabs
-        options={['Measurements', 'Photos']}
+        options={['Measurements', 'Muscle Areas', 'Photos']}
         activeOption={activeTab}
         onSelect={(opt) => setActiveTab(opt as any)}
       />
@@ -103,6 +107,31 @@ export const Body: React.FC = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* MUSCLE AREAS TAB */}
+      {activeTab === 'Muscle Areas' && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="text-lg font-bold text-white tracking-tight">Target Muscle Groups & Hypertrophy Areas</h3>
+              <p className="text-xs text-zinc-400">Visual guide to body areas, weekly volume targets & primary movements</p>
+            </div>
+            <span className="text-xs font-bold text-brand-400 bg-brand-500/10 px-3 py-1 rounded-full border border-brand-500/20 w-fit">
+              7 Active Body Regions
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockMuscleAreas.map((area) => (
+              <MuscleAreaCard
+                key={area.id}
+                area={area}
+                onSelectArea={() => navigate('/exercises')}
+              />
+            ))}
           </div>
         </div>
       )}
