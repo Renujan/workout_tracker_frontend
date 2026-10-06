@@ -5,6 +5,7 @@ import { Dumbbell, ChevronRight, Sparkles } from 'lucide-react';
 import { SearchInput } from '../components/common/SearchInput';
 import { FilterTabs } from '../components/common/FilterTabs';
 import { mockExercises } from '../data/mockData';
+import { mockMuscleAreas } from '../data/muscleAreasData';
 
 export const Exercises: React.FC = () => {
   const navigate = useNavigate();
@@ -30,6 +31,38 @@ export const Exercises: React.FC = () => {
       <div>
         <h2 className="text-2xl font-black text-white tracking-tight">Exercise Library</h2>
         <p className="text-xs text-zinc-400">Discover exercises, technique guides, and track your personal bests</p>
+      </div>
+
+      {/* Muscle Area Image Selector */}
+      <div className="space-y-2">
+        <h3 className="text-xs uppercase font-extrabold tracking-wider text-zinc-400">Filter by Target Muscle Area</h3>
+        <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+          {mockMuscleAreas.map((area) => {
+            const muscleName = area.name.replace(' Area', '').replace(' & Forearms', '');
+            const isSelected = selectedMuscle.toLowerCase().includes(muscleName.toLowerCase());
+            return (
+              <button
+                key={area.id}
+                onClick={() => setSelectedMuscle(isSelected ? 'All' : muscleName)}
+                className={`relative shrink-0 w-28 h-20 rounded-2xl overflow-hidden border transition-all text-left group ${
+                  isSelected
+                    ? 'border-brand-400 ring-2 ring-brand-400/40 shadow-lg scale-105'
+                    : 'border-zinc-800 hover:border-zinc-700 opacity-80 hover:opacity-100'
+                }`}
+              >
+                <img
+                  src={area.imageUrl}
+                  alt={area.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <span className="absolute bottom-2 left-2 text-[11px] font-black text-white tracking-tight">
+                  {muscleName}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Search & Filters */}
