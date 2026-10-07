@@ -1,11 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Dumbbell, Activity, Flame, Trophy, Calendar, Mail, Edit3 } from 'lucide-react';
+import { User, Dumbbell, Activity, Flame, Trophy, Calendar, Mail, Edit3, LogOut } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { MetricCard } from '../components/common/MetricCard';
 
 export const Profile: React.FC = () => {
   const { user } = useApp();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <div className="space-y-6 pb-6">
@@ -32,9 +41,18 @@ export const Profile: React.FC = () => {
                 </p>
               </div>
 
-              <button className="w-full sm:w-auto px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-bold text-zinc-200 flex items-center justify-center gap-1.5 transition-colors self-center sm:self-auto">
-                <Edit3 className="w-3.5 h-3.5" /> Edit Profile
-              </button>
+              <div className="flex items-center gap-2 self-center sm:self-auto">
+                <button className="w-full sm:w-auto px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-bold text-zinc-200 flex items-center justify-center gap-1.5 transition-colors">
+                  <Edit3 className="w-3.5 h-3.5" /> Edit Profile
+                </button>
+                <button
+                  id="profile-logout-btn"
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-xs font-bold text-red-400 flex items-center justify-center gap-1.5 transition-all"
+                >
+                  <LogOut className="w-3.5 h-3.5" /> Sign Out
+                </button>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-xs font-semibold text-zinc-400 pt-2 border-t border-zinc-800/80">
