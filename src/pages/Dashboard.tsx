@@ -10,9 +10,7 @@ import {
   Dumbbell,
   Activity,
   Trophy,
-  CheckCircle,
   Eye,
-  Zap,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -29,34 +27,97 @@ import { PRCard } from '../components/common/PRCard';
 import { CircularProgress } from '../components/common/CircularProgress';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { getTodayFormatted } from '../utils/formatters';
+import { mockCompletedWorkouts, mockExercises, mockWorkoutPlans } from '../data/mockData';
 
-const muscleSetsData = [
-  { name: 'Chest', sets: 14, color: '#22c55e' },
-  { name: 'Back', sets: 16, color: '#3b82f6' },
-  { name: 'Shoulders', sets: 12, color: '#a855f7' },
-  { name: 'Biceps', sets: 10, color: '#f59e0b' },
-  { name: 'Triceps', sets: 9, color: '#ec4899' },
-  { name: 'Legs', sets: 16, color: '#10b981' },
-  { name: 'Abs', sets: 8, color: '#06b6d4' },
-];
+// ─── Derived constants ────────────────────────────────────────────────────────
+
+/** Build muscle-set distribution from the most recent completed workouts (last 7 days / 5 sessions) */
+const buildMuscleSetsData = () => {
+  const muscleMap: Record<string, number> = {
+    Chest: 0, Back: 0, Shoulders: 0, Biceps: 0, Triceps: 0, Legs: 0, Abs: 0,
+  };
+  const muscleColors: Record<string, string> = {
+    Chest: '#22c55e', Back: '#3b82f6', Shoulders: '#a855f7',
+    Biceps: '#f59e0b', Triceps: '#ec4899', Legs: '#10b981', Abs: '#06b6d4',
+  };
+
+  // Map exercise names → muscle groups using the exercise library
+  const exerciseToMuscle: Record<string, string> = {};
+  mockExercises.forEach((ex) => {
+    exerciseToMuscle[ex.name.toLowerCase()] = ex.muscleGroup;
+  });
+
+  // Rough category → muscle mapping for exercises not in the library
+  const categoryFallback: Record<string, string[]> = {
+    Push: ['Chest', 'Shoulders', 'Triceps'],
+    Pull: ['Back', 'Biceps'],
+    Legs: ['Legs'],
+  };
+
+  mockCompletedWorkouts.forEach((session) => {
+    session.exercises.forEach((ex) => {
+      const muscle = exerciseToMuscle[ex.name.toLowerCase()];
+      if (muscle && muscle in muscleMap) {
+        muscleMap[muscle] += ex.sets;
+      } else {
+        // fallback by category
+        const fallbacks = categoryFallback[session.category] || [];
+        fallbacks.forEach((m) => {
+          if (m in muscleMap) muscleMap[m] += Math.floor(ex.sets / fallbacks.length);
+        });
+      }
+    });
+  });
+
+  return Object.entries(muscleMap).map(([name, sets]) => ({
+    name,
+    sets,
+    color: muscleColors[name],
+  }));
+};
+
+const muscleSetsData = buildMuscleSetsData();
+const maxMuscleSets = Math.max(...muscleSetsData.map((d) => d.sets), 20);
+
+/** Weekly volume from last 5 completed workouts */
+const totalWeeklyVolumeKg = mockCompletedWorkouts
+  .slice(0, 5)
+  .reduce((sum, w) => sum + w.totalVolumeKg, 0);
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { user, nutrition, personalRecords, setIsSessionCompareOpen } = useApp();
+  const { user, nutrition, personalRecords, activeWorkout, setIsSessionCompareOpen } = useApp();
   const [chartMetric, setChartMetric] = useState<'Weight' | 'Volume' | '1RM' | 'Reps'>('Weight');
 
-  const benchHistoryData = [
-    { week: 'W1', Weight: 50.0, Volume: 400, '1RM': 62, Reps: 8 },
-    { week: 'W2', Weight: 52.5, Volume: 420, '1RM': 65, Reps: 8 },
-    { week: 'W3', Weight: 52.5, Volume: 420, '1RM': 65, Reps: 8 },
-    { week: 'W4', Weight: 55.0, Volume: 440, '1RM': 68, Reps: 8 },
-    { week: 'W5', Weight: 55.0, Volume: 440, '1RM': 68, Reps: 8 },
-    { week: 'W6', Weight: 57.5, Volume: 460, '1RM': 72, Reps: 8 },
-    { week: 'W7', Weight: 60.0, Volume: 480, '1RM': 76, Reps: 8 },
-    { week: 'W8', Weight: 60.0, Volume: 480, '1RM': 76, Reps: 8 },
-  ];
+  // Build bench press history chart data from exercise library
+  const benchExercise = mockExercises.find((ex) => ex.id === 'ex_bench');
+  const benchHistoryData = benchExercise
+    ? benchExercise.history.map((h, i) => ({
+        week: `W${i + 1}`,
+        Weight: h.weight,
+        Volume: h.volume,
+        '1RM': h.estimated1RM,
+        Reps: h.reps,
+      }))
+    : [];
 
   const latestPR = personalRecords[0];
+
+  // Today's featured workout — use the active workout's plan name
+  const todayPlan = mockWorkoutPlans.find((p) => p.name === activeWorkout.name) || mockWorkoutPlans[0];
+
+  // Consistency: derive from user fields
+  const workoutGoalPercent = Math.round((user.weeklyWorkoutsCompleted / user.weeklyWorkoutsTarget) * 100);
+  const proteinDaysHit = nutrition.weeklyProteinHistory.filter(
+    (d) => d.proteinGrams >= nutrition.targetProteinGrams
+  ).length;
+  const consistencyScore = Math.round(
+    (workoutGoalPercent * 0.5) +
+    ((proteinDaysHit / 7) * 100 * 0.3) +
+    (user.weeklyCompletion * 0.2)
+  );
 
   return (
     <div className="space-y-6 pb-6">
@@ -111,14 +172,16 @@ export const Dashboard: React.FC = () => {
             </div>
             <div className="w-px h-8 sm:h-10 bg-zinc-800" />
             <div className="text-center">
-              <span className="text-xl sm:text-3xl font-black text-white">{user.weeklyWorkoutsCompleted}/6</span>
+              <span className="text-xl sm:text-3xl font-black text-white">
+                {user.weeklyWorkoutsCompleted}/{user.weeklyWorkoutsTarget}
+              </span>
               <span className="text-[10px] sm:text-[11px] text-zinc-400 font-semibold uppercase block">Workouts Done</span>
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Featured Today's Workout Card */}
+      {/* Featured Today's Workout Card — dynamic from active workout plan */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -132,13 +195,19 @@ export const Dashboard: React.FC = () => {
             <span className="text-[10px] sm:text-xs uppercase tracking-widest font-extrabold text-brand-400 bg-brand-500/10 px-3 py-1 rounded-full border border-brand-500/20">
               TODAY'S FEATURED WORKOUT
             </span>
-            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-2 sm:mt-3">Push Day</h3>
+            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-2 sm:mt-3">
+              {todayPlan.name}
+            </h3>
             <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs font-semibold text-zinc-400 mt-2">
-              <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5 text-brand-400" /> 5 exercises</span>
+              <span className="flex items-center gap-1">
+                <Dumbbell className="w-3.5 h-3.5 text-brand-400" /> {todayPlan.exerciseCount} exercises
+              </span>
               <span>•</span>
-              <span className="flex items-center gap-1"><Activity className="w-3.5 h-3.5 text-brand-400" /> 18 sets</span>
+              <span className="flex items-center gap-1">
+                <Activity className="w-3.5 h-3.5 text-brand-400" /> {todayPlan.estimatedSets} sets
+              </span>
               <span>•</span>
-              <span className="flex items-center gap-1">⏱️ 58 min</span>
+              <span className="flex items-center gap-1">⏱️ {todayPlan.estimatedMinutes} min</span>
             </div>
           </div>
 
@@ -164,8 +233,8 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
           title="Body Weight"
-          value="61.2 kg"
-          trend={{ value: '+0.7 kg this month', isPositive: true }}
+          value={`${user.currentWeightKg} kg`}
+          trend={{ value: `Target: ${user.targetWeightKg} kg`, isPositive: user.currentWeightKg < user.targetWeightKg }}
           icon={<Scale className="w-5 h-5" />}
         />
         <MetricCard
@@ -184,7 +253,7 @@ export const Dashboard: React.FC = () => {
         />
         <MetricCard
           title="Weekly Volume"
-          value="18,450 kg"
+          value={`${totalWeeklyVolumeKg.toLocaleString()} kg`}
           trend={{ value: '+8.4%', isPositive: true }}
           icon={<Activity className="w-5 h-5" />}
         />
@@ -197,7 +266,9 @@ export const Dashboard: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">Strength Progress</h3>
-              <p className="text-xs text-zinc-400">8-Week Progression — Bench Press</p>
+              <p className="text-xs text-zinc-400">
+                {benchExercise ? `${benchExercise.history.length}-Week Progression — Bench Press` : 'Loading...'}
+              </p>
             </div>
 
             {/* Tabs */}
@@ -249,11 +320,11 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Muscle Group Analytics */}
+        {/* Muscle Group Analytics — derived from completed workouts */}
         <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-white tracking-tight">Muscle Group Sets</h3>
-            <span className="text-xs font-semibold text-zinc-400">Weekly Target</span>
+            <span className="text-xs font-semibold text-zinc-400">Weekly Total</span>
           </div>
 
           <div className="space-y-3 pt-2">
@@ -262,7 +333,7 @@ export const Dashboard: React.FC = () => {
                 key={item.name}
                 label={item.name}
                 value={item.sets}
-                max={20}
+                max={maxMuscleSets}
                 sublabel={`${item.sets} sets`}
                 size="sm"
                 colorClass="from-brand-500 to-brand-bright"
@@ -290,19 +361,19 @@ export const Dashboard: React.FC = () => {
           {latestPR && <PRCard pr={latestPR} isFeatured={true} />}
         </div>
 
-        {/* Consistency Card */}
+        {/* Consistency Card — derived from user context */}
         <div className="bg-[#18181B] border border-zinc-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
           <div>
             <h3 className="text-lg font-bold text-white tracking-tight mb-2">Weekly Consistency</h3>
-            <p className="text-xs text-zinc-400">Based on training, protein & habit tracking</p>
+            <p className="text-xs text-zinc-400">Based on training, protein &amp; habit tracking</p>
 
             <div className="my-5 flex items-center justify-center">
               <CircularProgress
-                percentage={87}
+                percentage={consistencyScore}
                 size={130}
                 strokeWidth={10}
                 color="#22c55e"
-                centerText="87%"
+                centerText={`${consistencyScore}%`}
                 centerSubtext="Score"
               />
             </div>
@@ -310,25 +381,35 @@ export const Dashboard: React.FC = () => {
             <div className="space-y-2 text-xs font-medium border-t border-zinc-800 pt-3">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400">Workout Goal</span>
-                <span className="text-white font-bold">6 / 6 days</span>
+                <span className="text-white font-bold">
+                  {user.weeklyWorkoutsCompleted} / {user.weeklyWorkoutsTarget} days
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400">Protein Target</span>
-                <span className="text-white font-bold">5 / 7 days</span>
+                <span className="text-white font-bold">{proteinDaysHit} / 7 days</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-zinc-400">Hydration Target</span>
-                <span className="text-white font-bold">6 / 7 days</span>
+                <span className="text-zinc-400">Calories Logged</span>
+                <span className="text-white font-bold">
+                  {nutrition.calories} / {nutrition.targetCalories} kcal
+                </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-zinc-400">Weight Logging</span>
-                <span className="text-white font-bold">4 / 7 days</span>
+                <span className="text-zinc-400">Hydration</span>
+                <span className="text-white font-bold">
+                  {nutrition.waterLiters}L / {nutrition.targetWaterLiters}L
+                </span>
               </div>
             </div>
           </div>
 
           <div className="mt-4 bg-brand-500/10 border border-brand-500/20 rounded-xl p-3 text-center text-xs font-bold text-brand-400">
-            "You're building a strong habit." 🔥
+            {consistencyScore >= 80
+              ? '"You\'re building a strong habit." 🔥'
+              : consistencyScore >= 60
+              ? '"Stay consistent — you\'re improving!" 💪'
+              : '"Every rep counts. Keep going!" 🎯'}
           </div>
         </div>
       </div>
