@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Award, Lock, Sparkles } from 'lucide-react';
+import { Trophy, Lock } from 'lucide-react';
 import { AchievementCard } from '../components/common/AchievementCard';
 import { FilterTabs } from '../components/common/FilterTabs';
 import { mockAchievements } from '../data/mockData';
@@ -17,6 +17,14 @@ export const Achievements: React.FC = () => {
   });
 
   const unlockedCount = mockAchievements.filter((a) => a.unlocked).length;
+  const totalCount = mockAchievements.length;
+  const completionPercent = Math.round((unlockedCount / totalCount) * 100);
+
+  // Find the next locked achievement to show dynamically
+  const nextLocked = mockAchievements.find((a) => !a.unlocked);
+  const motivationalText = nextLocked
+    ? `Keep training consistently to unlock "${nextLocked.title}"!`
+    : 'Amazing! You have unlocked all achievements! 🎉';
 
   return (
     <div className="space-y-6 pb-6">
@@ -24,9 +32,9 @@ export const Achievements: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
-            Achievements & Trophies 🏆
+            Achievements &amp; Trophies 🏆
           </h2>
-          <p className="text-xs text-zinc-400">Unlock badges by hitting fitness milestones, streaks & PRs</p>
+          <p className="text-xs text-zinc-400">Unlock badges by hitting fitness milestones, streaks &amp; PRs</p>
         </div>
 
         <FilterTabs
@@ -44,27 +52,36 @@ export const Achievements: React.FC = () => {
           </div>
           <div>
             <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
-              {unlockedCount} of {mockAchievements.length} Achievements Unlocked
+              {unlockedCount} of {totalCount} Achievements Unlocked
             </h3>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              Keep training consistently to unlock 30 Day Streak!
-            </p>
+            <p className="text-xs text-zinc-400 mt-0.5">{motivationalText}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <span className="text-xs font-black text-brand-400 bg-brand-500/10 px-3.5 py-1.5 rounded-full border border-brand-500/30">
-            {Math.round((unlockedCount / mockAchievements.length) * 100)}% Complete
+            {completionPercent}% Complete
           </span>
+          {nextLocked && (
+            <span className="text-xs font-bold text-zinc-400 bg-zinc-800 px-3.5 py-1.5 rounded-full border border-zinc-700 flex items-center gap-1">
+              <Lock className="w-3 h-3" /> {totalCount - unlockedCount} Locked
+            </span>
+          )}
         </div>
       </div>
 
       {/* Achievements Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-        {filtered.map((item) => (
-          <AchievementCard key={item.id} achievement={item} />
-        ))}
-      </div>
+      {filtered.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          {filtered.map((item) => (
+            <AchievementCard key={item.id} achievement={item} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-16 text-zinc-500 text-sm font-semibold">
+          No achievements in this category yet.
+        </div>
+      )}
     </div>
   );
 };
