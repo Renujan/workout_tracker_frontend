@@ -62,7 +62,46 @@ The frontend is structured with an API-ready service layer (`src/services/`):
 - `progressService.ts`
 - `userService.ts`
 
-These modules expose async promise-based interfaces operating on centralized mock data in `src/data/mockData.ts`, enabling seamless wiring to a Django REST Framework backend API in future phases.
+These modules expose async promise-based interfaces operating on centralized mock data in `src/data/mockData.ts`, enabling seamless wiring to the Django REST Framework backend.
+
+---
+
+## 🔗 Full-Stack Architecture
+
+```
+workout_tracker_frontend  (this repo)        workout_tracker_backend
+─────────────────────────────────────        ──────────────────────────────────
+React + TypeScript + Vite                    Django 5.2 + DRF + JWT
+src/services/ (mock → DRF swap)    ────►    /api/v1/ (JWT-protected REST API)
+AppContext (global state)                    5 apps: users, workouts, exercises,
+Recharts + Framer Motion                              nutrition, progress
+```
+
+**Backend repo**: [workout_tracker_backend](https://github.com/Renujan/workout_tracker_backend)
+
+---
+
+## 📅 Development Log
+
+### 2026-10-09 (Day 1)
+**Frontend (this repo)**
+- Static React app with full UI: Dashboard, Workout, Exercise Library, Progress Analytics, Nutrition, Body, Goals, Achievements, Insights, Profile, Settings
+- All data driven by AppContext + mock data via `src/data/mockData.ts`
+- Service layer structured for DRF integration
+
+**Backend** ([workout_tracker_backend](https://github.com/Renujan/workout_tracker_backend))
+- Initialized Django 5.2 project with DRF, JWT auth, CORS, django-filter
+- Built 5 Django apps: `users`, `workouts`, `exercises`, `nutrition`, `progress`
+- 14 models, 13 serializers, 11 API ViewSets
+- `python manage.py seed_data` — seeds full demo dataset
+- `python manage.py check` — 0 issues
+- 13 git commits pushed to GitHub
+
+### Coming Up (Day 2+)
+- 🔜 Wire frontend service layer to live DRF endpoints (replace mock data)
+- 🔜 JWT token handling in frontend (axios interceptors)
+- 🔜 Implement real-time rest timer via WebSocket (Django Channels)
+- 🔜 Deploy backend to Railway/Render + frontend to Vercel/Netlify
 
 ---
 
