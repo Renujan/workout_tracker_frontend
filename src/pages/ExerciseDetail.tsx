@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -25,13 +25,43 @@ import { FilterTabs } from '../components/common/FilterTabs';
 import { MetricCard } from '../components/common/MetricCard';
 import { formatDate } from '../utils/formatters';
 
+import { exerciseService } from '../services/exerciseService';
+import { ExerciseItem } from '../types';
+
 export const ExerciseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'Overview' | 'History' | 'Sets'>('Overview');
   const [chartMetric, setChartMetric] = useState<'weight' | 'volume' | 'estimated1RM'>('weight');
+  const [exercise, setExercise] = useState<ExerciseItem | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const exercise = mockExercises.find((e) => e.id === id) || mockExercises[0];
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+    exerciseService.getExerciseById(id).then((data) => {
+      if (data) {
+        setExercise(data);
+      } else {
+        setExercise(mockExercises[0]);
+      }
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading || !exercise) {
+    return (
+      <div className="space-y-6 pb-6 animate-pulse">
+        <div className="h-10 bg-zinc-800 rounded-2xl w-48" />
+        <div className="h-56 bg-zinc-800 rounded-3xl" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-24 bg-zinc-800 rounded-2xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-6">
