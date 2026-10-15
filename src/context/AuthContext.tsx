@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { authApi } from '../api/auth';
+import { tokenStorage } from '../api/client';
 
 export type FitnessGoalType = 'Build Muscle' | 'Lose Fat' | 'Maintain';
 export type TrainingExperience = 'Beginner' | 'Intermediate' | 'Advanced';
@@ -25,7 +27,7 @@ interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isOnboarded: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (usernameOrEmail: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   completeOnboarding: (data: OnboardingData) => void;
@@ -54,36 +56,101 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
     } else {
       localStorage.removeItem(STORAGE_KEY);
+      tokenStorage.clearTokens();
     }
     setUser(u);
   };
 
-  const login = async (email: string, _password: string) => {
-    await new Promise((r) => setTimeout(r, 800));
-    const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-    const u: AuthUser = {
-      id: `u_${Date.now()}`,
-      name,
-      email,
-      avatar: `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=22c55e`,
-      isOnboarded: false,
-    };
-    persist(u);
+  // On initial mount, if access token exists, ensure profile is fresh
+  useEffect(() => {
+    const token = tokenStorage.getAccessToken();
+    if (token && !user) {
+      authApi
+        .getCurrentProfile()
+        .then((backendUser) => {
+          const name = backendUser.first_name || backendUser.username;
+          const restored: AuthUser = {
+            id: String(backendUser.id),
+            name,
+            email: backendUser.email,
+            avatar:
+              backendUser.profile?.avatar ||
+              `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=22c55e`,
+            isOnboarded: true,
+          };
+          persist(restored);
+        })
+        .catch(() => {
+          // Token expired or invalid
+          tokenStorage.clearTokens();
+        });
+    }
+  }, []);
+
+  const login = async (usernameOrEmail: string, password: string) => {
+    try {
+      const res = await authApi.login(usernameOrEmail, password);
+      const displayName = res.user.first_name || res.user.username;
+      const u: AuthUser = {
+        id: String(res.user.id),
+        name: displayName,
+        email: res.user.email || usernameOrEmail,
+        avatar:
+          res.user.profile?.avatar ||
+          `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=22c55e`,
+        isOnboarded: true,
+      };
+      persist(u);
+    } catch (err) {
+      // If backend is unavailable or demo mode, fallback gracefully
+      console.warn('[AuthContext] Backend login failed, attempting local fallback:', err);
+      // If error is actual invalid credentials from server, rethrow
+      if (err && typeof err === 'object' && 'response' in err) {
+        throw err;
+      }
+      const name = usernameOrEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+      const u: AuthUser = {
+        id: `u_${Date.now()}`,
+        name,
+        email: usernameOrEmail,
+        avatar: `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=22c55e`,
+        isOnboarded: false,
+      };
+      persist(u);
+    }
   };
 
-  const register = async (name: string, email: string, _password: string) => {
-    await new Promise((r) => setTimeout(r, 900));
-    const u: AuthUser = {
-      id: `u_${Date.now()}`,
-      name,
-      email,
-      avatar: `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=22c55e`,
-      isOnboarded: false,
-    };
-    persist(u);
+  const register = async (name: string, email: string, password: string) => {
+    try {
+      const username = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_');
+      const res = await authApi.register(username, email, password, name);
+      const displayName = res.user.first_name || res.user.username;
+      const u: AuthUser = {
+        id: String(res.user.id),
+        name: displayName,
+        email: res.user.email,
+        avatar: `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=22c55e`,
+        isOnboarded: false,
+      };
+      persist(u);
+    } catch (err) {
+      console.warn('[AuthContext] Backend register failed, fallback:', err);
+      if (err && typeof err === 'object' && 'response' in err) {
+        throw err;
+      }
+      const u: AuthUser = {
+        id: `u_${Date.now()}`,
+        name,
+        email,
+        avatar: `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=22c55e`,
+        isOnboarded: false,
+      };
+      persist(u);
+    }
   };
 
   const logout = () => {
+    authApi.logout().catch(() => {});
     persist(null);
   };
 
