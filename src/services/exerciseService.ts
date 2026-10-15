@@ -23,7 +23,21 @@ interface BackendExercise {
   created_at?: string;
 }
 
-const mapBackendToExerciseItem = (raw: BackendExercise): ExerciseItem => {
+interface BackendExercisePR {
+  exercise_id: number;
+  exercise_name: string;
+  all_time_max_weight_kg: number;
+  max_weight_reps: number;
+  max_weight_date: string;
+  all_time_max_volume_kg: number;
+  best_estimated_1rm: number;
+  total_logged_sessions: number;
+}
+
+const mapBackendToExerciseItem = (
+  raw: BackendExercise,
+  prData?: Partial<BackendExercisePR>
+): ExerciseItem => {
   const historyPoints: ExerciseHistoryPoint[] = (raw.history || []).map((h) => ({
     date: h.date,
     weight: Number(h.weight_kg),
@@ -52,13 +66,13 @@ const mapBackendToExerciseItem = (raw: BackendExercise): ExerciseItem => {
     imageUrl: resolvedImageUrl,
     description: raw.description || matchingMock?.description || '',
     personalBest: {
-      weight: maxWeightFromHist || matchingMock?.personalBest.weight || 0,
-      reps: historyPoints[0]?.reps || matchingMock?.personalBest.reps || 0,
-      date: historyPoints[0]?.date || matchingMock?.personalBest.date || 'Recent',
+      weight: prData?.all_time_max_weight_kg ?? (maxWeightFromHist || matchingMock?.personalBest.weight || 0),
+      reps: prData?.max_weight_reps ?? (historyPoints[0]?.reps || matchingMock?.personalBest.reps || 0),
+      date: prData?.max_weight_date ?? (historyPoints[0]?.date || matchingMock?.personalBest.date || 'Recent'),
     },
-    bestVolumeKg: maxVolumeFromHist || matchingMock?.bestVolumeKg || 0,
-    estimated1RM: max1RMFromHist || matchingMock?.estimated1RM || 0,
-    totalSessions: historyPoints.length || matchingMock?.totalSessions || 0,
+    bestVolumeKg: prData?.all_time_max_volume_kg ?? (maxVolumeFromHist || matchingMock?.bestVolumeKg || 0),
+    estimated1RM: prData?.best_estimated_1rm ?? (max1RMFromHist || matchingMock?.estimated1RM || 0),
+    totalSessions: prData?.total_logged_sessions ?? (historyPoints.length || matchingMock?.totalSessions || 0),
     history: historyPoints.length > 0 ? historyPoints : (matchingMock?.history || []),
   };
 };
@@ -93,7 +107,21 @@ export const exerciseService = {
   },
 
   async getExerciseById(id: string): Promise<ExerciseItem | undefined> {
-    return mockExercises.find((ex) => ex.id === id);
+    try {
+      const [exRes, prRes] = await Promise.allSettled([
+        apiClient.get<BackendExercise>(`/exercises/${id}/`),
+        apiClient.get<BackendExercisePR>(`/exercises/${id}/pr/`),
+      ]);
+
+      if (exRes.status === 'fulfilled') {
+        const prData = prRes.status === 'fulfilled' ? prRes.value.data : undefined;
+        return mapBackendToExerciseItem(exRes.value.data, prData);
+      }
+    } catch (err) {
+      console.warn(`[exerciseService] Error loading exercise ${id}, fallback to mock:`, err);
+    }
+
+    return mockExercises.find((ex) => ex.id === id) || mockExercises[0];
   },
 
   async getCategories(): Promise<{
